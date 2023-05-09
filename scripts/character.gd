@@ -98,14 +98,16 @@ func _input(ev):
 				
 
 func _physics_process(delta):
-	# Add the gravity.
+	# Add the gravity and handle floor state resets
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 	else:
 		jumping = false
 		jump_vector = Vector2(-0.1, -0.1)
-	# Handle Jump (Default toggle jumping).
+		
+		
 	
+	# Handle Jump (Default toggle jumping).
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		jumping = true
 		velocity.y = JUMP_VELOCITY
@@ -115,7 +117,7 @@ func _physics_process(delta):
 	# Default toggle key_turning
 	key_turning = false
 	
-	# See above comment about lunacy
+	# See above line 56 comment about lunacy
 	if not drag_turning:
 		# Key turning functions: default keyed to A and D
 		if Input.is_action_pressed("turn_left"):
@@ -132,9 +134,14 @@ func _physics_process(delta):
 	# If the user jumping, then most movement inputs shouldn't be relevant
 	# (Locked velocity jumping)
 	if jumping:
-		velocity.x = lerp(velocity.x, jump_vector.x, .5)
-		velocity.z = lerp(velocity.z, jump_vector.y, .5)
-		
+		velocity.x = jump_vector.x
+		velocity.z = jump_vector.y
+	
+	# Add a dampening modifier to speed if the user is moving backwards
+	var true_speed = SPEED
+	if Input.is_action_pressed("ui_down"):
+		true_speed = SPEED * .5
+	
 	# The only exception is if the user has started a jump with NO directional
 	# velocity (a 'neutral jump')
 	if not jumping or in_neutral_jump():
@@ -146,21 +153,29 @@ func _physics_process(delta):
 				neutral_jump_mod = NEUTRAL_JUMP_MOD
 			
 			# LERP our current velocity upwards towards our maximum speed (minor delay)
-			velocity.x = lerp(velocity.x, (direction.x * SPEED) * neutral_jump_mod, 0.5)
-			velocity.z = lerp(velocity.z, (direction.z * SPEED) * neutral_jump_mod, 0.5)
+			velocity.x = lerp(velocity.x, (direction.x * true_speed) * neutral_jump_mod, 0.5)
+			velocity.z = lerp(velocity.z, (direction.z * true_speed) * neutral_jump_mod, 0.5)
 			
+			# If we just added a weakened velocity onto a neutral jump,
+			# we have to update our jump vector so we no longer think we're
+			# in a neutral jump
 			if in_neutral_jump():
 				jump_vector = Vector2(velocity.x, velocity.z)
 			
 		else:
-			#LERP our current velocity downwards towards zero (nearly no delay)
+			
 			velocity.x = 0.0
 			velocity.z = 0.0
-	print(velocity.z)
+	
 	# Internal Godot function that does velocity/friction based movement
 	# (I assume)
 	move_and_slide()
 
-#Function to shortscript a jump with no movement vector
+#Shortscript for a jump with no movement vector
 func in_neutral_jump():
 	return jump_vector.x == 0 and jump_vector.y == 0
+
+#Shortscript for 'any movement key pressed'
+func any_movement():
+	return Input.is_action_pressed("ui_down") or Input.is_action_pressed("ui_up") or Input.is_action_pressed("ui_left") or Input.is_action_pressed("ui_right")
+
