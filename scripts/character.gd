@@ -36,6 +36,10 @@ var buffered_vector
 var buffered_jump = false
 var buffered_jump_timer = 0.0
 
+# Values for coyote jumping
+var coyote_timer = 0.0
+var coyote_jumpable = false
+
 # This stuff runs once this node is fully loaded
 func _ready():
 	# lets the script access input
@@ -108,6 +112,7 @@ func _physics_process(delta):
 		buffered_move_timer += delta
 	if buffered_jump:
 		buffered_jump_timer += delta
+	coyote_timer += delta
 		
 	# reset input buffers
 	if buffered_move_timer >= 0.35:
@@ -116,18 +121,22 @@ func _physics_process(delta):
 	if buffered_jump_timer >= 0.25:
 		buffered_jump_timer = 0.0
 		buffered_jump = false
+	if coyote_timer >= 0.2:
+		coyote_timer = 0.0
+		coyote_jumpable = false
 	
 	# Add the gravity and handle floor state resets
 	if not is_on_floor():
+		if not jumping:
+			coyote_timer = 0.0
+			coyote_jumpable = true
 		velocity.y -= gravity * delta
 	if is_on_floor():
 		jumping = false
-		
 		#if we've got a jump buffered, this is the moment we want to trigger it
 		#since we've just landed on the floor and we're before the normal
 		#jump trigger
 		if buffered_jump:
-			print("Buffered jump!")
 			jumping=true
 			velocity.y = JUMP_VELOCITY
 			buffered_jump = false
@@ -148,9 +157,8 @@ func _physics_process(delta):
 	# Handle Jump (Default toggle jumping).
 	
 	if Input.is_action_just_pressed("ui_accept"):
-		if is_on_floor():
+		if is_on_floor() or coyote_jumpable:
 			#If we press jump while on the floor, it's a normal jump
-			print("Normal jump!")
 			jumping = true
 			velocity.y = JUMP_VELOCITY
 			if buffered_move:
@@ -158,6 +166,7 @@ func _physics_process(delta):
 				buffered_move = false
 			else:
 				jump_vector = Vector2(velocity.x, velocity.z)
+			coyote_jumpable = false
 		else:
 			#If we're not on the floor, we're trying to buffer a jump!
 			buffered_jump = true
@@ -198,7 +207,8 @@ func _physics_process(delta):
 		buffered_move = true
 		buffered_vector = Vector2(direction.x * true_speed, direction.z * true_speed)
 		buffered_move_timer = 0.0
-	
+	else:
+		buffered_move = false
 	
 	# The only exception is if the user has started a jump with NO directional
 	# velocity (a 'neutral jump')
