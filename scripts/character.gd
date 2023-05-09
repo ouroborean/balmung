@@ -3,6 +3,9 @@ extends CharacterBody3D
 
 const SPEED = 7.0
 const JUMP_VELOCITY = 6.5
+const VIEW_SENSITIVITY_MOD_X = 0.3
+const VIEW_SENSITIVITY_MOD_Y = 0.2
+
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -39,19 +42,20 @@ func _input(ev):
 			drag_turning = true
 			if ev.position.x < click_drag_origin.x:
 				var rotation_mag = click_drag_origin.x - ev.position.x
-				rotate_y(deg_to_rad(rotation_mag))
+				rotate_y(deg_to_rad(rotation_mag * VIEW_SENSITIVITY_MOD_X))
 			elif ev.position.x > click_drag_origin.x:
 				var rotation_mag = ev.position.x - click_drag_origin.x
-				rotate_y(deg_to_rad(-rotation_mag))
-				
+				rotate_y(deg_to_rad(-rotation_mag * VIEW_SENSITIVITY_MOD_X))
+			click_drag_origin.x = ev.position.x
 			
+				
+		if pressed:
 			if ev.position.y < click_drag_origin.y:
 				var rotation_mag = click_drag_origin.y - ev.position.y
-				$CameraBar.rotate_x(deg_to_rad(rotation_mag * .33))
+				$CameraBar.rotate_x(deg_to_rad(rotation_mag * VIEW_SENSITIVITY_MOD_Y))
 			elif ev.position.y > click_drag_origin.y:
 				var rotation_mag = ev.position.y - click_drag_origin.y
-				$CameraBar.rotate_x(deg_to_rad(-rotation_mag * .33))
-			click_drag_origin.x = ev.position.x
+				$CameraBar.rotate_x(deg_to_rad(-rotation_mag * VIEW_SENSITIVITY_MOD_Y))
 			click_drag_origin.y = ev.position.y
 				
 
