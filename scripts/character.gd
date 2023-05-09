@@ -38,7 +38,7 @@ var buffered_jump_timer = 0.0
 
 # Values for coyote jumping
 var coyote_timer = 0.0
-var coyote_jumpable = false
+const COYOTE_LIMIT = 0.33
 
 # This stuff runs once this node is fully loaded
 func _ready():
@@ -121,17 +121,12 @@ func _physics_process(delta):
 	if buffered_jump_timer >= 0.25:
 		buffered_jump_timer = 0.0
 		buffered_jump = false
-	if coyote_timer >= 0.2:
-		coyote_timer = 0.0
-		coyote_jumpable = false
 	
 	# Add the gravity and handle floor state resets
 	if not is_on_floor():
-		if not jumping:
-			coyote_timer = 0.0
-			coyote_jumpable = true
 		velocity.y -= gravity * delta
 	if is_on_floor():
+		coyote_timer = 0.0
 		jumping = false
 		#if we've got a jump buffered, this is the moment we want to trigger it
 		#since we've just landed on the floor and we're before the normal
@@ -157,7 +152,7 @@ func _physics_process(delta):
 	# Handle Jump (Default toggle jumping).
 	
 	if Input.is_action_just_pressed("ui_accept"):
-		if is_on_floor() or coyote_jumpable:
+		if is_on_floor() or coyote_jumpable():
 			#If we press jump while on the floor, it's a normal jump
 			jumping = true
 			velocity.y = JUMP_VELOCITY
@@ -166,7 +161,6 @@ func _physics_process(delta):
 				buffered_move = false
 			else:
 				jump_vector = Vector2(velocity.x, velocity.z)
-			coyote_jumpable = false
 		else:
 			#If we're not on the floor, we're trying to buffer a jump!
 			buffered_jump = true
@@ -212,7 +206,7 @@ func _physics_process(delta):
 	
 	# The only exception is if the user has started a jump with NO directional
 	# velocity (a 'neutral jump')
-	if not jumping or in_neutral_jump():
+	if is_on_floor() or in_neutral_jump():
 		if direction:
 			# A modifier for velocity that accounts for being in a neutral
 			# jump. If not, the modifier is just a 1x
@@ -247,3 +241,5 @@ func in_neutral_jump():
 func any_movement():
 	return Input.is_action_pressed("ui_down") or Input.is_action_pressed("ui_up") or Input.is_action_pressed("ui_left") or Input.is_action_pressed("ui_right")
 
+func coyote_jumpable():
+	return coyote_timer <= COYOTE_LIMIT and not jumping
