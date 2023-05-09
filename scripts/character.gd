@@ -1,8 +1,8 @@
 extends CharacterBody3D
 
 
-const SPEED = 4.0
-const JUMP_VELOCITY = 6.5
+const SPEED = 5.0
+const JUMP_VELOCITY = 5.5
 const VIEW_SENSITIVITY_MOD_X = 0.3
 const VIEW_SENSITIVITY_MOD_Y = 0.2
 
@@ -28,6 +28,13 @@ var click_drag_origin
 var jumping = false
 var jump_vector = Vector2(-0.1, -0.1)
 const NEUTRAL_JUMP_MOD = 0.7
+
+# Values for jump-related input buffer
+var buffered_move = false
+var buffered_move_timer = 0.0
+var buffered_vector
+var buffered_jump = false
+var buffered_jump_timer = 0.0
 
 # This stuff runs once this node is fully loaded
 func _ready():
@@ -81,11 +88,9 @@ func _input(ev):
 			if ev.position.y < click_drag_origin.y:
 				var rotation_mag = click_drag_origin.y - ev.position.y
 				$CameraBar.rotate_x(deg_to_rad(rotation_mag * VIEW_SENSITIVITY_MOD_Y))
-				print(rad_to_deg($CameraBar.rotation.x))
 			elif ev.position.y > click_drag_origin.y:
 				var rotation_mag = ev.position.y - click_drag_origin.y
 				$CameraBar.rotate_x(deg_to_rad(-rotation_mag * VIEW_SENSITIVITY_MOD_Y))
-				print(rad_to_deg($CameraBar.rotation.x))
 				
 			# If we're fully vertical (-60) or even with the ground (30), don't
 			# go further than that. This code will need to be replaced with
@@ -98,21 +103,68 @@ func _input(ev):
 				
 
 func _physics_process(delta):
+	# Add change in time to input buffer variables
+	if buffered_move:
+		buffered_move_timer += delta
+	if buffered_jump:
+		buffered_jump_timer += delta
+		
+	# reset input buffers
+	if buffered_move_timer >= 0.35:
+		buffered_move_timer = 0.0
+		buffered_move = false
+	if buffered_jump_timer >= 0.25:
+		buffered_jump_timer = 0.0
+		buffered_jump = false
+	
 	# Add the gravity and handle floor state resets
 	if not is_on_floor():
 		velocity.y -= gravity * delta
-	else:
+	if is_on_floor():
 		jumping = false
-		jump_vector = Vector2(-0.1, -0.1)
+		
+		#if we've got a jump buffered, this is the moment we want to trigger it
+		#since we've just landed on the floor and we're before the normal
+		#jump trigger
+		if buffered_jump:
+			print("Buffered jump!")
+			jumping=true
+			velocity.y = JUMP_VELOCITY
+			buffered_jump = false
+			
+			#If we also have a movement command buffered, use that as our new
+			#jump vector
+			if buffered_move:
+				jump_vector = buffered_vector
+				buffered_move = false
+			else:
+				jump_vector = Vector2(0.0, 0.0)
+			buffered_jump_timer = 0.0
+		else:
+			jump_vector = Vector2(0.0, 0.0)
 		
 		
 	
 	# Handle Jump (Default toggle jumping).
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
-		jumping = true
-		velocity.y = JUMP_VELOCITY
-		jump_vector = Vector2(velocity.x, velocity.z)
-		print("Set jump vector to " + str(jump_vector))
+	
+	if Input.is_action_just_pressed("ui_accept"):
+		if is_on_floor():
+			#If we press jump while on the floor, it's a normal jump
+			print("Normal jump!")
+			jumping = true
+			velocity.y = JUMP_VELOCITY
+			if buffered_move:
+				jump_vector = buffered_vector
+				buffered_move = false
+			else:
+				jump_vector = Vector2(velocity.x, velocity.z)
+		else:
+			#If we're not on the floor, we're trying to buffer a jump!
+			buffered_jump = true
+			buffered_jump_timer = 0.0
+	
+	
+	
 		
 	# Default toggle key_turning
 	key_turning = false
@@ -131,16 +183,22 @@ func _physics_process(delta):
 	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
-	# If the user jumping, then most movement inputs shouldn't be relevant
-	# (Locked velocity jumping)
-	if jumping:
-		velocity.x = jump_vector.x
-		velocity.z = jump_vector.y
-	
 	# Add a dampening modifier to speed if the user is moving backwards
 	var true_speed = SPEED
 	if Input.is_action_pressed("ui_down"):
 		true_speed = SPEED * .5
+	
+	# If the user jumping, then most movement inputs shouldn't be relevant
+	# (Locked velocity jumping)
+	# Add our current direction to the movement buffer to make changing
+	# jump directions feel smoother
+	if jumping:
+		velocity.x = jump_vector.x
+		velocity.z = jump_vector.y
+		buffered_move = true
+		buffered_vector = Vector2(direction.x * true_speed, direction.z * true_speed)
+		buffered_move_timer = 0.0
+	
 	
 	# The only exception is if the user has started a jump with NO directional
 	# velocity (a 'neutral jump')
@@ -173,7 +231,7 @@ func _physics_process(delta):
 
 #Shortscript for a jump with no movement vector
 func in_neutral_jump():
-	return jump_vector.x == 0 and jump_vector.y == 0
+	return jump_vector.x == 0 and jump_vector.y == 0 and jumping
 
 #Shortscript for 'any movement key pressed'
 func any_movement():
