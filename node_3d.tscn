@@ -47,8 +47,8 @@ transform = Transform3D(1, 2.98023e-08, 8.9407e-08, -1.49012e-08, 1, 1.19209e-07
 mesh = SubResource("BoxMesh_p55k1")
 surface_material_override/0 = SubResource("StandardMaterial3D_3aeq0")
 
-[node name="Box2" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.6541, 2.67751, -2.51232)
+[node name="Box2" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.6541, 2.29744, -2.51232)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Box2"]
 transform = Transform3D(1, 2.98023e-08, 2.98023e-08, -1.49012e-08, 1, 5.96046e-08, 0, 2.98023e-08, 1, -0.148822, -6.00815e-05, 0.318319)
@@ -59,8 +59,8 @@ transform = Transform3D(1, 2.98023e-08, 5.96046e-08, -1.49012e-08, 1, 1.19209e-0
 mesh = SubResource("BoxMesh_p55k1")
 surface_material_override/0 = SubResource("StandardMaterial3D_3aeq0")
 
-[node name="Box3" type="RigidBody3D" parent="."]
-transform = Transform3D(0.706194, 0.194486, 0.680783, 0.108439, 0.920478, -0.375449, -0.699665, 0.338963, 0.628946, -7.19187, 1.53913, -5.89315)
+[node name="Box3" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.92662, 0.762023, -4.4234)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Box3"]
 transform = Transform3D(1, -2.98023e-08, -2.08616e-07, 7.45058e-08, 1, -2.98023e-08, -2.38419e-07, -7.45058e-08, 1, -0.263713, -0.162267, 0.166138)
@@ -100,13 +100,14 @@ script = ExtResource("2_nve71")
 [node name="Camera3D" type="Camera3D" parent="Character/CameraBar"]
 transform = Transform3D(0.999997, 0.000753626, -0.00214005, 3.36157e-09, 0.943223, 0.332161, 0.00226887, -0.33216, 0.94322, 0, 3, 6)
 
-[node name="RigidBody3D" type="RigidBody3D" parent="."]
-transform = Transform3D(0.788655, 0, 0.614836, 0, 1, 0, -0.614836, 0, 0.788655, -13.4525, 2, -5.38845)
+[node name="RigidBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(0.788655, 0, 0.614836, 0, 1, 0, -0.614836, 0, 0.788655, -13.4525, 1.20097, -5.38845)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
 shape = SubResource("BoxShape3D_rblmp")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D"]
+transform = Transform3D(1, 0, 2.98023e-08, 0, 1, 0, -2.98023e-08, 0, 1, 0, 0, 0)
 mesh = SubResource("BoxMesh_t3r5t")
 
 [node name="Step" type="StaticBody3D" parent="."]
@@ -116,4 +117,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.6751, 1.80951, -3.48576)
 shape = SubResource("BoxShape3D_7rns0")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Step"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.343663, 0)
 mesh = SubResource("BoxMesh_oyqk2")
