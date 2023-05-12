@@ -344,10 +344,15 @@ func can_move():
 
 func set_target(entity):
 	target = entity
+	
+func remove_target():
+	target = null
 
 func _on_enemy_target_clicked(entity):
 	if target:
+		print("Targeted with a current target!")
 		target.detarget()
+		remove_target()
 	set_target(entity)
 	entity.set_targeted()
 

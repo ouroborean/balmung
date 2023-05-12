@@ -19,10 +19,12 @@ func _process(delta):
 	pass
 
 func set_targeted():
+	print("Targeted ", npc_data.name)
 	npc_data.set_targeted()
 	process_targeting()
 
 func detarget():
+	print("Detargeted ", npc_data.name)
 	npc_data.detarget()
 	process_targeting()
 	
@@ -32,7 +34,10 @@ func process_targeting():
 		var instance = scene.instantiate()
 		add_child(instance)
 	else:
-		$Arrow.queue_free()
+		print("Deleting an arrow!")
+		for _i in get_children():
+			if _i.is_in_group("arrow"):
+				_i.queue_free()
 
 func _on_input_event(camera, event, position, normal, shape_idx):
 	if event is InputEventMouseButton and event.button_index == 1 and event.pressed:
