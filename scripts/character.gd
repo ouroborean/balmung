@@ -1,9 +1,32 @@
 extends CharacterBody3D
 
 
+enum movement {
+	JUMPING,
+	FALLING,
+	DASHING,
+	GROUNDED,
+	KNOCKED,
+	MOVING,
+	GLIDING,
+	TRANSITIONING
+}
+
+var movement_names = {
+	0: "Jumping",
+	1: "Falling",
+	2: "Dashing",
+	3: "Grounded",
+	4: "Knocked",
+	5: "Moving",
+	6: "Gliding"
+}
+
+var move_state = movement.GROUNDED
+
 const SPEED = 5.0
 const JUMP_VELOCITY = 5.5
-const VIEW_SENSITIVITY_MOD_X = 0.3
+const VIEW_SENSITIVITY_MOD_X = 0.35
 const VIEW_SENSITIVITY_MOD_Y = 0.2
 
 
@@ -26,6 +49,7 @@ var click_drag_origin
 
 # State values for locked velocity jumping
 var jumping = false
+var falling = false
 var jump_vector = Vector2(-0.1, -0.1)
 const NEUTRAL_JUMP_MOD = 0.7
 
@@ -38,7 +62,13 @@ var buffered_jump_timer = 0.0
 
 # Values for coyote jumping
 var coyote_timer = 0.0
-const COYOTE_LIMIT = 0.33
+const COYOTE_LIMIT = 0.1
+
+#Values for dash tracking
+var dash_timer = 0.0
+var active_dash_limit = 0.0
+
+
 
 # This stuff runs once this node is fully loaded
 func _ready():
@@ -48,9 +78,10 @@ func _ready():
 
 # pumps input events every frame
 func _input(ev):
-	#toggle drag_turning off by default; it will be set true in just a moment if
-	#we're still dragging, but will remain false if we aren't
-	drag_turning = false
+	
+	if not Input.is_action_pressed("turn_left") and not Input.is_action_pressed("turn_right"):
+		key_turning = false
+	
 	
 	# more like if right-click, amirite?
 	if ev is InputEventMouseButton and ev.button_index == 2:
@@ -59,7 +90,10 @@ func _input(ev):
 		# update the last known position of the mouse with the mouse button down
 		# to judge the rate at which it's traveling per frame for controlling
 		# camera rotation speed
-		click_drag_origin = Vector2(ev.position.x, ev.position.y)
+		if pressed:
+			click_drag_origin = Vector2(ev.position.x, ev.position.y)
+		else:
+			drag_turning = false
 		
 	# more like if...mouse motion
 	if ev is InputEventMouseMotion:
@@ -108,14 +142,16 @@ func _input(ev):
 
 func _physics_process(delta):
 	# Add change in time to input buffer variables
+	if dashing():
+		dash_timer += delta
 	if buffered_move:
 		buffered_move_timer += delta
 	if buffered_jump:
 		buffered_jump_timer += delta
 	coyote_timer += delta
-		
+	
 	# reset input buffers
-	if buffered_move_timer >= 0.35:
+	if buffered_move_timer >= 0.25:
 		buffered_move_timer = 0.0
 		buffered_move = false
 	if buffered_jump_timer >= 0.25:
@@ -124,53 +160,26 @@ func _physics_process(delta):
 	
 	# Add the gravity and handle floor state resets
 	if not is_on_floor():
-		velocity.y -= gravity * delta
-	if is_on_floor():
-		coyote_timer = 0.0
-		jumping = false
-		#if we've got a jump buffered, this is the moment we want to trigger it
-		#since we've just landed on the floor and we're before the normal
-		#jump trigger
-		if buffered_jump:
-			jumping=true
-			velocity.y = JUMP_VELOCITY
-			buffered_jump = false
-			
-			#If we also have a movement command buffered, use that as our new
-			#jump vector
-			if buffered_move:
-				jump_vector = buffered_vector
-				buffered_move = false
-			else:
-				jump_vector = Vector2(0.0, 0.0)
-			buffered_jump_timer = 0.0
-		else:
-			jump_vector = Vector2(0.0, 0.0)
-		
-		
+		if move_state == movement.GROUNDED:
+			fall()
+		if move_state != movement.DASHING:
+			velocity.y -= gravity * delta
+		if velocity.y < 0:
+			move_state = movement.FALLING
+	else:
+		if move_state != movement.DASHING and move_state != movement.GROUNDED:
+			land()
 	
+		
 	# Handle Jump (Default toggle jumping).
 	
 	if Input.is_action_just_pressed("ui_accept"):
-		if is_on_floor() or coyote_jumpable():
-			#If we press jump while on the floor, it's a normal jump
-			jumping = true
-			velocity.y = JUMP_VELOCITY
-			if buffered_move:
-				jump_vector = buffered_vector
-				buffered_move = false
-			else:
-				jump_vector = Vector2(velocity.x, velocity.z)
+		if can_jump():
+			jump()
 		else:
-			#If we're not on the floor, we're trying to buffer a jump!
+			#If we can't currently jump, we're trying to buffer a jump!
 			buffered_jump = true
 			buffered_jump_timer = 0.0
-	
-	
-	
-		
-	# Default toggle key_turning
-	key_turning = false
 	
 	# See above line 56 comment about lunacy
 	if not drag_turning:
@@ -182,31 +191,19 @@ func _physics_process(delta):
 			rotate_y(deg_to_rad(-4.0))
 			key_turning = true
 	
+	
 	# Get the input direction and handle the movement/deceleration.
 	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	
+		
 	# Add a dampening modifier to speed if the user is moving backwards
 	var true_speed = SPEED
 	if Input.is_action_pressed("ui_down"):
 		true_speed = SPEED * .5
 	
-	# If the user jumping, then most movement inputs shouldn't be relevant
-	# (Locked velocity jumping)
-	# Add our current direction to the movement buffer to make changing
-	# jump directions feel smoother
-	if jumping:
-		velocity.x = jump_vector.x
-		velocity.z = jump_vector.y
-		buffered_move = true
-		buffered_vector = Vector2(direction.x * true_speed, direction.z * true_speed)
-		buffered_move_timer = 0.0
-	else:
+	if can_move():	
 		buffered_move = false
-	
-	# The only exception is if the user has started a jump with NO directional
-	# velocity (a 'neutral jump')
-	if is_on_floor() or in_neutral_jump():
+		buffered_vector = Vector2(0.0, 0.0)
 		if direction:
 			# A modifier for velocity that accounts for being in a neutral
 			# jump. If not, the modifier is just a 1x
@@ -225,21 +222,120 @@ func _physics_process(delta):
 				jump_vector = Vector2(velocity.x, velocity.z)
 			
 		else:
-			
 			velocity.x = 0.0
 			velocity.z = 0.0
-	
+	else:
+		# As long as we have a stored jump vector and we're not dashing,
+		# modify our vector
+		if (jump_vector.x != 0 or jump_vector.y != 0) and not move_state == movement.DASHING:
+			velocity.x = jump_vector.x
+			velocity.z = jump_vector.y
+		#If we received a movement action, but can't move, we're buffering
+		#movement
+		buffered_move = true
+		buffered_move_timer = 0.0
+		buffered_vector = Vector2(direction.x * true_speed, direction.z * true_speed)
+	if Input.is_action_just_pressed("dash"):
+		dash(14.0, 0.3)		
+	if Input.is_action_just_pressed("disengage"):
+		knock_away(10, 5.0)
 	# Internal Godot function that does velocity/friction based movement
 	# (I assume)
 	move_and_slide()
 
 #Shortscript for a jump with no movement vector
 func in_neutral_jump():
-	return jump_vector.x == 0 and jump_vector.y == 0 and jumping
+	return jump_vector.x == 0 and jump_vector.y == 0 and move_state == movement.JUMPING
 
 #Shortscript for 'any movement key pressed'
 func any_movement():
 	return Input.is_action_pressed("ui_down") or Input.is_action_pressed("ui_up") or Input.is_action_pressed("ui_left") or Input.is_action_pressed("ui_right")
 
 func coyote_jumpable():
-	return coyote_timer <= COYOTE_LIMIT and not jumping
+	return coyote_timer <= COYOTE_LIMIT and move_state == movement.FALLING
+	
+func dash(speed, duration):
+	# Get input direction for dash
+	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	print(direction)
+	# If there's an input direction,
+	# set the state to dashing and start
+	# the dash timer
+	if (direction.x == 0 and direction.z == 0):
+		direction = (transform.basis * Vector3(0, 0, -1))
+	if direction:
+		move_state = movement.DASHING
+		velocity.x = direction.x * speed
+		velocity.y = 0
+		velocity.z = direction.z * speed
+		active_dash_limit = duration
+		dash_timer = 0.0
+
+func dashing():
+	#Reports if the character is currently dashing by checking the dash timer.
+	#If the dash is out of time, handle the resetting of the dash state 
+	#before returning false. This is very good code practice, yes yes
+	if active_dash_limit > 0.0 and dash_timer >= active_dash_limit:
+		active_dash_limit = 0.0
+		dash_timer = 0.0
+		velocity.x = lerp(velocity.x, 0.0, 0.2)
+		velocity.z = lerp(velocity.z, 0.0, 0.2)
+		move_state = movement.TRANSITIONING
+		if not is_on_floor():
+			fall()
+	return dash_timer < active_dash_limit
+
+func knock_away(speed, height=0):
+	var direction = (transform.basis * Vector3(0, 0, 1)).normalized()
+	knockback(direction, speed, height)
+
+func knockback(direction, speed, height):
+	move_state = movement.KNOCKED
+	velocity.x = direction.x * speed
+	velocity.y = height
+	velocity.z = direction.z * speed
+	reset_jump_vector()
+
+func jump():
+	if can_jump():
+		move_state = movement.JUMPING
+		velocity.y = JUMP_VELOCITY
+		if buffered_move:
+			jump_vector = buffered_vector
+			buffered_move = false
+		else:
+			set_jump_vector(velocity.x, velocity.z)
+
+func land():
+	move_state = movement.GROUNDED
+	if buffered_jump:
+		jump()
+		buffered_jump = false
+	
+func set_jump_vector(x, z):
+	jump_vector = Vector2(x, z)
+
+func reset_jump_vector():
+	jump_vector = Vector2(0.0, 0.0)
+
+func fall():
+	if move_state != movement.DASHING and move_state != movement.KNOCKED:
+		move_state = movement.FALLING
+		coyote_timer = 0.0
+		set_jump_vector(velocity.x, velocity.z)
+
+func grounded():
+	return velocity.y == 0 and move_state != movement.DASHING and move_state != movement.KNOCKED and move_state != movement.FALLING and move_state != movement.JUMPING
+
+func can_jump():
+	return move_state == movement.GROUNDED or coyote_jumpable()
+	
+func can_dash():
+	return move_state != movement.DASHING and move_state != movement.KNOCKED
+	
+func can_move():
+	return (move_state != movement.FALLING and 
+		move_state != movement.KNOCKED and
+		(move_state != movement.JUMPING or in_neutral_jump()) and
+		move_state != movement.DASHING)
