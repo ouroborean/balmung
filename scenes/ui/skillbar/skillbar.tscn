@@ -1,0 +1,422 @@
+[gd_scene load_steps=5 format=3 uid="uid://ckjkqlmedvy14"]
+
+[ext_resource type="Texture2D" uid="uid://vfhl6jt0pnh7" path="res://assets/ui/skill_icons/blade-drag.png" id="1_2mhij"]
+[ext_resource type="Script" path="res://scenes/ui/skillbar/AbilityButton.gd" id="2_0id5b"]
+
+[sub_resource type="Theme" id="Theme_o6kdb"]
+
+[sub_resource type="SystemFont" id="SystemFont_j5how"]
+font_names = PackedStringArray("Arial Rounded MT")
+subpixel_positioning = 0
+
+[node name="HBoxContainer" type="HBoxContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 421.0
+offset_top = 878.0
+offset_right = 3891.0
+offset_bottom = 1390.0
+grow_horizontal = 2
+scale = Vector2(0.2, 0.2)
+theme = SubResource("Theme_o6kdb")
+theme_override_constants/separation = 30
+
+[node name="AbilityButton" type="TextureButton" parent="."]
+layout_mode = 2
+texture_normal = ExtResource("1_2mhij")
+script = ExtResource("2_0id5b")
+
+[node name="Sweep" type="TextureProgressBar" parent="AbilityButton"]
+modulate = Color(0.121569, 0.121569, 0.121569, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+
+[node name="Timer" type="Timer" parent="AbilityButton"]
+one_shot = true
+
+[node name="Counter" type="MarginContainer" parent="AbilityButton"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -126.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = -1
+
+[node name="Value" type="Label" parent="AbilityButton/Counter"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 23
+theme_override_fonts/font = SubResource("SystemFont_j5how")
+theme_override_font_sizes/font_size = 106
+text = "0.0"
+horizontal_alignment = 2
+clip_text = true
+
+[node name="AbilityButton2" type="TextureButton" parent="."]
+layout_mode = 2
+texture_normal = ExtResource("1_2mhij")
+script = ExtResource("2_0id5b")
+
+[node name="Sweep" type="TextureProgressBar" parent="AbilityButton2"]
+modulate = Color(0.121569, 0.121569, 0.121569, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+
+[node name="Timer" type="Timer" parent="AbilityButton2"]
+one_shot = true
+
+[node name="Counter" type="MarginContainer" parent="AbilityButton2"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -126.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = -1
+
+[node name="Value" type="Label" parent="AbilityButton2/Counter"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 23
+theme_override_fonts/font = SubResource("SystemFont_j5how")
+theme_override_font_sizes/font_size = 106
+text = "0.0"
+horizontal_alignment = 2
+clip_text = true
+
+[node name="AbilityButton3" type="TextureButton" parent="."]
+layout_mode = 2
+texture_normal = ExtResource("1_2mhij")
+script = ExtResource("2_0id5b")
+
+[node name="Sweep" type="TextureProgressBar" parent="AbilityButton3"]
+modulate = Color(0.121569, 0.121569, 0.121569, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+
+[node name="Timer" type="Timer" parent="AbilityButton3"]
+one_shot = true
+
+[node name="Counter" type="MarginContainer" parent="AbilityButton3"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -126.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = -1
+
+[node name="Value" type="Label" parent="AbilityButton3/Counter"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 23
+theme_override_fonts/font = SubResource("SystemFont_j5how")
+theme_override_font_sizes/font_size = 106
+text = "0.0"
+horizontal_alignment = 2
+clip_text = true
+
+[node name="AbilityButton4" type="TextureButton" parent="."]
+layout_mode = 2
+texture_normal = ExtResource("1_2mhij")
+script = ExtResource("2_0id5b")
+
+[node name="Sweep" type="TextureProgressBar" parent="AbilityButton4"]
+modulate = Color(0.121569, 0.121569, 0.121569, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+
+[node name="Timer" type="Timer" parent="AbilityButton4"]
+one_shot = true
+
+[node name="Counter" type="MarginContainer" parent="AbilityButton4"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -126.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = -1
+
+[node name="Value" type="Label" parent="AbilityButton4/Counter"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 23
+theme_override_fonts/font = SubResource("SystemFont_j5how")
+theme_override_font_sizes/font_size = 106
+text = "0.0"
+horizontal_alignment = 2
+clip_text = true
+
+[node name="AbilityButton5" type="TextureButton" parent="."]
+layout_mode = 2
+texture_normal = ExtResource("1_2mhij")
+script = ExtResource("2_0id5b")
+
+[node name="Sweep" type="TextureProgressBar" parent="AbilityButton5"]
+modulate = Color(0.121569, 0.121569, 0.121569, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+
+[node name="Timer" type="Timer" parent="AbilityButton5"]
+one_shot = true
+
+[node name="Counter" type="MarginContainer" parent="AbilityButton5"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -126.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = -1
+
+[node name="Value" type="Label" parent="AbilityButton5/Counter"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 23
+theme_override_fonts/font = SubResource("SystemFont_j5how")
+theme_override_font_sizes/font_size = 106
+text = "0.0"
+horizontal_alignment = 2
+clip_text = true
+
+[node name="AbilityButton6" type="TextureButton" parent="."]
+layout_mode = 2
+texture_normal = ExtResource("1_2mhij")
+script = ExtResource("2_0id5b")
+
+[node name="Sweep" type="TextureProgressBar" parent="AbilityButton6"]
+modulate = Color(0.121569, 0.121569, 0.121569, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+
+[node name="Timer" type="Timer" parent="AbilityButton6"]
+one_shot = true
+
+[node name="Counter" type="MarginContainer" parent="AbilityButton6"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -126.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = -1
+
+[node name="Value" type="Label" parent="AbilityButton6/Counter"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 23
+theme_override_fonts/font = SubResource("SystemFont_j5how")
+theme_override_font_sizes/font_size = 106
+text = "0.0"
+horizontal_alignment = 2
+clip_text = true
+
+[node name="AbilityButton7" type="TextureButton" parent="."]
+layout_mode = 2
+texture_normal = ExtResource("1_2mhij")
+script = ExtResource("2_0id5b")
+
+[node name="Sweep" type="TextureProgressBar" parent="AbilityButton7"]
+modulate = Color(0.121569, 0.121569, 0.121569, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+
+[node name="Timer" type="Timer" parent="AbilityButton7"]
+one_shot = true
+
+[node name="Counter" type="MarginContainer" parent="AbilityButton7"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -126.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = -1
+
+[node name="Value" type="Label" parent="AbilityButton7/Counter"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 23
+theme_override_fonts/font = SubResource("SystemFont_j5how")
+theme_override_font_sizes/font_size = 106
+text = "0.0"
+horizontal_alignment = 2
+clip_text = true
+
+[node name="AbilityButton8" type="TextureButton" parent="."]
+layout_mode = 2
+texture_normal = ExtResource("1_2mhij")
+script = ExtResource("2_0id5b")
+
+[node name="Sweep" type="TextureProgressBar" parent="AbilityButton8"]
+modulate = Color(0.121569, 0.121569, 0.121569, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+
+[node name="Timer" type="Timer" parent="AbilityButton8"]
+one_shot = true
+
+[node name="Counter" type="MarginContainer" parent="AbilityButton8"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -126.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = -1
+
+[node name="Value" type="Label" parent="AbilityButton8/Counter"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 23
+theme_override_fonts/font = SubResource("SystemFont_j5how")
+theme_override_font_sizes/font_size = 106
+text = "0.0"
+horizontal_alignment = 2
+clip_text = true
+
+[node name="AbilityButton9" type="TextureButton" parent="."]
+layout_mode = 2
+texture_normal = ExtResource("1_2mhij")
+script = ExtResource("2_0id5b")
+
+[node name="Sweep" type="TextureProgressBar" parent="AbilityButton9"]
+modulate = Color(0.121569, 0.121569, 0.121569, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+
+[node name="Timer" type="Timer" parent="AbilityButton9"]
+one_shot = true
+
+[node name="Counter" type="MarginContainer" parent="AbilityButton9"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -126.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = -1
+
+[node name="Value" type="Label" parent="AbilityButton9/Counter"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 23
+theme_override_fonts/font = SubResource("SystemFont_j5how")
+theme_override_font_sizes/font_size = 106
+text = "0.0"
+horizontal_alignment = 2
+clip_text = true
+
+[node name="AbilityButton10" type="TextureButton" parent="."]
+layout_mode = 2
+texture_normal = ExtResource("1_2mhij")
+script = ExtResource("2_0id5b")
+
+[node name="Sweep" type="TextureProgressBar" parent="AbilityButton10"]
+modulate = Color(0.121569, 0.121569, 0.121569, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+
+[node name="Timer" type="Timer" parent="AbilityButton10"]
+one_shot = true
+
+[node name="Counter" type="MarginContainer" parent="AbilityButton10"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -126.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = -1
+
+[node name="Value" type="Label" parent="AbilityButton10/Counter"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 23
+theme_override_fonts/font = SubResource("SystemFont_j5how")
+theme_override_font_sizes/font_size = 106
+text = "0.0"
+horizontal_alignment = 2
+clip_text = true
