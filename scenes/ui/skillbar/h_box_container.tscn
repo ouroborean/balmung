@@ -1,6 +1,5 @@
-[gd_scene load_steps=4 format=3 uid="uid://crwu8we60i11"]
+[gd_scene load_steps=3 format=3 uid="uid://crwu8we60i11"]
 
-[ext_resource type="Texture2D" uid="uid://vfhl6jt0pnh7" path="res://assets/ui/skill_icons/blade-drag.png" id="1_n6db1"]
 [ext_resource type="Script" path="res://scenes/ui/skillbar/AbilityButton.gd" id="2_7w3rb"]
 
 [sub_resource type="SystemFont" id="SystemFont_qdqjy"]
@@ -18,7 +17,7 @@ grow_vertical = 0
 [node name="AbilityButton" type="TextureButton" parent="."]
 layout_mode = 2
 button_mask = 0
-texture_normal = ExtResource("1_n6db1")
+stretch_mode = 0
 script = ExtResource("2_7w3rb")
 
 [node name="Sweep" type="TextureProgressBar" parent="AbilityButton"]
@@ -56,5 +55,4 @@ text = "0.0"
 horizontal_alignment = 2
 clip_text = true
 
-[connection signal="mouse_entered" from="AbilityButton" to="AbilityButton" method="_on_mouse_entered"]
 [connection signal="pressed" from="AbilityButton" to="AbilityButton" method="_on_pressed"]

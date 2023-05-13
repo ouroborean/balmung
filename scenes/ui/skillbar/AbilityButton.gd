@@ -4,8 +4,12 @@ extends TextureButton
 
 @export var cooldown = 1.0
 
+signal ability_use(ability)
+
+var ability
+
 func _ready():
-	$Timer.wait_time = cooldown
+	
 	time_label.hide()
 	$Sweep.texture_progress = texture_normal
 	$Sweep.value = 0
@@ -17,6 +21,13 @@ func _ready():
 # Connect the AbilityButton's "pressed" signal to _on_AbilityButton_pressed() function
 	pressed.connect(_on_AbilityButton_pressed)
 	
+
+func bind_ability(bind_ability):
+	ability = bind_ability
+	texture_normal = ability.texture
+	$Sweep.texture_progress = texture_normal
+	cooldown = ability.cooldown
+	$Timer.wait_time = cooldown
 	
 
 func _process(delta):
@@ -25,12 +36,16 @@ func _process(delta):
 	
 	
 func _on_AbilityButton_pressed():
-	print("Pressed!")
-	disabled = true
-	set_process(true)
-	$Timer.start()
-	time_label.show()
-	
+	activate_button()
+
+func activate_button():
+	if ability:
+		ability_use.emit(ability)
+		disabled = true
+		set_process(true)
+		$Timer.start()
+		time_label.show()
+		
 	
 func _on_Timer_timeout():
 	print("Ability ready!")
@@ -41,12 +56,5 @@ func _on_Timer_timeout():
 
 
 func _on_pressed():
-	print("Pressed!")
-	disabled = true
-	set_process(true)
-	$Timer.start()
-	time_label.show()
+	activate_button()
 
-
-func _on_mouse_entered():
-	print("Entered!") # Replace with function body.
