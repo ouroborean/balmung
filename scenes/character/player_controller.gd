@@ -1,6 +1,10 @@
 extends CharacterBody3D
 
-var char_data = load("res://scenes/character/character.gd").new("Cheshire", 100)
+var char_data = load("res://scenes/character/character.gd").new("Cheshire", 100.0, "ASSASSIN")
+
+var abilities = [load("res://scenes/ability/ability.gd").new("Bond, the Guardian", 25, 5, "anya4"),
+ load("res://scenes/ability/ability.gd").new("Autoattack", 5, 1, "blade-drag")]
+
 var target
 
 enum movement {
@@ -84,6 +88,12 @@ func _ready():
 	$EnergyBar.visible = not get_viewport().get_camera_3d().is_position_behind(global_transform.origin)
 	var screen_pos_energy = get_viewport().get_camera_3d().unproject_position(global_transform.origin)
 	$EnergyBar.position = Vector2(screen_pos_energy.x - 100, screen_pos_energy.y + 123)
+	print("Getting ability list?")
+	
+	$Skillbar.get_ability_list(abilities)
+	for ability in $Skillbar.get_children():
+		ability.ability_use.connect(_on_AbilityButton_ability_use)
+			
 
 
 # pumps input events every frame
@@ -91,6 +101,7 @@ func _input(ev):
 	
 	if not Input.is_action_pressed("turn_left") and not Input.is_action_pressed("turn_right"):
 		key_turning = false
+	
 	
 	
 	# more like if right-click, amirite?
@@ -183,7 +194,7 @@ func _physics_process(delta):
 		
 	# Handle Jump (Default toggle jumping).
 	
-	if Input.is_action_just_pressed("ui_accept"):
+	if Input.is_action_just_pressed("jump"):
 		if can_jump():
 			jump()
 		else:
@@ -373,3 +384,7 @@ func _on_enemy_target_clicked(entity):
 
 func _on_action_button_button_down():
 	print(char_data.name)
+	
+func _on_AbilityButton_ability_use(ability):
+	if char_data.can_use(ability):
+		ability.execute(char_data)

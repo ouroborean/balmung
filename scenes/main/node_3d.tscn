@@ -1,10 +1,8 @@
-
-[ext_resource type="PackedScene" uid="uid://ckjkqlmedvy14" path="res://scenes/ui/skillbar/skillbar.tscn" id="1_tixpp"]
-
-[gd_scene load_steps=14 format=3 uid="uid://b7en7pdc43dq"]
+[gd_scene load_steps=15 format=3 uid="uid://ckjkqlmedvy14"]
 
 [ext_resource type="PackedScene" uid="uid://cljfjrkvp4elj" path="res://scenes/character/character.tscn" id="1_vekim"]
 [ext_resource type="Script" path="res://managers/entity_manager.gd" id="1_y3qca"]
+[ext_resource type="PackedScene" uid="uid://ckjkqlmedvy14" path="res://scenes/ui/skillbar/skillbar.tscn" id="3_rx6eq"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_r3jnp"]
 
@@ -36,10 +34,6 @@ size = Vector3(6, 4, 5)
 
 [sub_resource type="BoxMesh" id="BoxMesh_oyqk2"]
 
-
-[node name="SkillBar" parent="." instance=ExtResource("1_tixpp")]
-
-
 [node name="World" type="Node3D"]
 
 [node name="EntityManager" type="Node" parent="."]
@@ -54,6 +48,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1, -5)
 transform = Transform3D(1, 0, 0, 0, 0.943223, 0.332161, 0, -0.332161, 0.943222, 0, 3, 6)
 current = true
 
+[node name="Skillbar" parent="EntityManager/Player" instance=ExtResource("3_rx6eq")]
+offset_top = 1000.0
+offset_bottom = 1512.0
+
 [node name="Scenery" type="Node3D" parent="."]
 
 [node name="Box2" type="StaticBody3D" parent="Scenery"]
@@ -64,11 +62,9 @@ transform = Transform3D(1, 2.98023e-08, 2.98023e-08, -1.49012e-08, 1, 5.96046e-0
 shape = SubResource("BoxShape3D_r3jnp")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Scenery/Box2"]
-
 transform = Transform3D(1, 2.98023e-08, 5.96046e-08, -1.49012e-08, 1, 1.19209e-07, 0, 2.98023e-08, 1, -0.148822, -6.00815e-05, 0.318319)
 mesh = SubResource("BoxMesh_p55k1")
 surface_material_override/0 = SubResource("StandardMaterial3D_3aeq0")
-
 
 [node name="Box4" type="StaticBody3D" parent="Scenery"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.391525, 0.479218, -5.89161)
@@ -78,7 +74,6 @@ transform = Transform3D(1, 2.98023e-08, 2.98023e-08, -1.49012e-08, 1, 5.96046e-0
 shape = SubResource("BoxShape3D_r3jnp")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Scenery/Box4"]
-
 transform = Transform3D(1, 2.98023e-08, 5.96046e-08, -1.49012e-08, 1, 1.19209e-07, 0, 2.98023e-08, 1, -0.148822, -6.00815e-05, 0.318319)
 mesh = SubResource("BoxMesh_p55k1")
 surface_material_override/0 = SubResource("StandardMaterial3D_3aeq0")
@@ -91,7 +86,6 @@ transform = Transform3D(1, -2.98023e-08, -2.08616e-07, 7.45058e-08, 1, -2.98023e
 shape = SubResource("BoxShape3D_r3jnp")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Scenery/Box3"]
-
 transform = Transform3D(1, 0, -3.27826e-07, 1.19209e-07, 1, -8.9407e-08, -4.47035e-07, -1.49012e-07, 1, -0.263713, -0.162267, 0.166138)
 mesh = SubResource("BoxMesh_p55k1")
 surface_material_override/0 = SubResource("StandardMaterial3D_3aeq0")
