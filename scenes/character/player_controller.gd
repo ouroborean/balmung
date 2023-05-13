@@ -1,5 +1,7 @@
 extends CharacterBody3D
 
+var char_data = load("res://scenes/character/character.gd").new("Cheshire", 100)
+var target
 
 enum movement {
 	JUMPING,
@@ -19,7 +21,8 @@ var movement_names = {
 	3: "Grounded",
 	4: "Knocked",
 	5: "Moving",
-	6: "Gliding"
+	6: "Gliding",
+	7: "Transitioning"
 }
 
 var move_state = movement.GROUNDED
@@ -74,6 +77,13 @@ var active_dash_limit = 0.0
 func _ready():
 	# lets the script access input
 	set_process_input(true)
+	$HealthBar.visible = not get_viewport().get_camera_3d().is_position_behind(global_transform.origin)
+	var screen_pos_hp = get_viewport().get_camera_3d().unproject_position(global_transform.origin)
+	$HealthBar.position = Vector2(screen_pos_hp.x - 100, screen_pos_hp.y + 100)
+	
+	$EnergyBar.visible = not get_viewport().get_camera_3d().is_position_behind(global_transform.origin)
+	var screen_pos_energy = get_viewport().get_camera_3d().unproject_position(global_transform.origin)
+	$EnergyBar.position = Vector2(screen_pos_energy.x - 100, screen_pos_energy.y + 123)
 
 
 # pumps input events every frame
@@ -220,7 +230,7 @@ func _physics_process(delta):
 			# in a neutral jump
 			if in_neutral_jump():
 				jump_vector = Vector2(velocity.x, velocity.z)
-			
+		
 		else:
 			velocity.x = 0.0
 			velocity.z = 0.0
@@ -236,7 +246,7 @@ func _physics_process(delta):
 		buffered_move_timer = 0.0
 		buffered_vector = Vector2(direction.x * true_speed, direction.z * true_speed)
 	if Input.is_action_just_pressed("dash"):
-		dash(14.0, 0.3)		
+		dash(14.0, 0.3)	
 	if Input.is_action_just_pressed("disengage"):
 		knock_away(10, 5.0)
 	# Internal Godot function that does velocity/friction based movement
@@ -253,17 +263,24 @@ func any_movement():
 
 func coyote_jumpable():
 	return coyote_timer <= COYOTE_LIMIT and move_state == movement.FALLING
-	
+
+func distance_to_target():
+	if target:
+		return consolidate_distance(abs(global_position - target.global_position))
+
+func consolidate_distance(distance):
+	return distance.x + distance.y + distance.z	
+
 func dash(speed, duration):
 	# Get input direction for dash
 	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	print(direction)
 	# If there's an input direction,
 	# set the state to dashing and start
 	# the dash timer
 	if (direction.x == 0 and direction.z == 0):
 		direction = (transform.basis * Vector3(0, 0, -1))
+	
 	if direction:
 		move_state = movement.DASHING
 		velocity.x = direction.x * speed
@@ -339,3 +356,20 @@ func can_move():
 		move_state != movement.KNOCKED and
 		(move_state != movement.JUMPING or in_neutral_jump()) and
 		move_state != movement.DASHING)
+
+func set_target(entity):
+	target = entity
+	
+func remove_target():
+	target = null
+
+func _on_enemy_target_clicked(entity):
+	if target:
+		target.detarget()
+		remove_target()
+	set_target(entity)
+	entity.set_targeted()
+	
+
+func _on_action_button_button_down():
+	print(char_data.name)
