@@ -1,6 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://crnmjp6o0q1kp"]
+[gd_scene load_steps=6 format=3 uid="uid://sclp2ty5814n"]
 
-[ext_resource type="Script" path="res://scripts/arrow_bob.gd" id="1_41uxl"]
+[ext_resource type="Script" path="res://scenes/ui/overhead/arrow_bob.gd" id="1_xaqfw"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ha4q0"]
 albedo_color = Color(0.929412, 0.0627451, 0.0941176, 1)
@@ -18,7 +18,7 @@ size = Vector3(0.5, 1, 0.5)
 
 [node name="Arrow" type="Node3D" groups=["arrow"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.38581, 0)
-script = ExtResource("1_41uxl")
+script = ExtResource("1_xaqfw")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 0.959002, 0)

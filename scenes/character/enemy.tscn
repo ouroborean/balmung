@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://307wi351ykeu"]
 
-[ext_resource type="Script" path="res://scripts/npc_controller.gd" id="1_cyagm"]
+[ext_resource type="Script" path="res://scenes/character/npc_controller.gd" id="1_hg1sh"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_e7clm"]
 height = 1.89159
@@ -8,7 +8,7 @@ height = 1.89159
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_pftmn"]
 
 [node name="Enemy" type="CharacterBody3D"]
-script = ExtResource("1_cyagm")
+script = ExtResource("1_hg1sh")
 
 [node name="Body" type="CollisionShape3D" parent="."]
 shape = SubResource("CylinderShape3D_e7clm")

@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://b605uu6mm2vix"]
+[gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://scripts/name_plate.gd" id="1_nswnr"]
+[ext_resource type="Script" path="res://scenes/ui/overhead/name_plate.gd" id="1_nswnr"]
 
 [node name="NamePlate" type="Control"]
 layout_mode = 3

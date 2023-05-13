@@ -1,6 +1,6 @@
 extends CharacterBody3D
 
-var char_data = load("res://scripts/character.gd").new("Cheshire", 100)
+var char_data = load("res://scenes/character/character.gd").new("Cheshire", 100)
 var target
 
 enum movement {

@@ -1,7 +1,7 @@
-[gd_scene load_steps=14 format=3 uid="uid://bld64grf7rl1d"]
+[gd_scene load_steps=14 format=3 uid="uid://b7en7pdc43dq"]
 
-[ext_resource type="Script" path="res://scripts/entity_manager.gd" id="1_11prr"]
-[ext_resource type="PackedScene" uid="uid://dbinx0r15yqi3" path="res://assets/character.tscn" id="1_vekim"]
+[ext_resource type="PackedScene" uid="uid://cljfjrkvp4elj" path="res://scenes/character/character.tscn" id="1_vekim"]
+[ext_resource type="Script" path="res://managers/entity_manager.gd" id="1_y3qca"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_r3jnp"]
 
@@ -36,7 +36,7 @@ size = Vector3(6, 4, 5)
 [node name="World" type="Node3D"]
 
 [node name="EntityManager" type="Node" parent="."]
-script = ExtResource("1_11prr")
+script = ExtResource("1_y3qca")
 
 [node name="Player" parent="EntityManager" instance=ExtResource("1_vekim")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1, -5)

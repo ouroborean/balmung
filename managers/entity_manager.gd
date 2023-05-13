@@ -11,7 +11,7 @@ func _ready():
 	
 
 func instantiate_action_button(action_name, pos):
-	var entity = load("res://assets/action_button.tscn").instantiate()
+	var entity = load("res://scenees/ui/skillbar/action_button.tscn").instantiate()
 	entity.position = pos
 	var button = entity.get_node("TextureRect/TextureButton")
 	button.button_down.connect(player._on_action_button_button_down)
@@ -22,7 +22,7 @@ func instantiate_action_button(action_name, pos):
 func instantiate_entity(entity_id, pos = Vector3(0, 0, 0)):
 	
 	
-	var entity = load("res://assets/enemy.tscn").instantiate()
+	var entity = load("res://scenes/character/enemy.tscn").instantiate()
 	
 	#get the entity's personal data and assign it
 	entity.assign_npc_data(entity_id)

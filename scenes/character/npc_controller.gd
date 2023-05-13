@@ -15,7 +15,7 @@ func _ready():
 func assign_npc_data(entity_id):
 	#TODO: add a connection to the database for storing
 	#	entity information
-	npc_data = load("res://scripts/npc.gd").new("Goblin", 50)
+	npc_data = load("res://scenes/character/npc.gd").new("Goblin", 50)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -38,7 +38,7 @@ func set_targeted():
 	toggle_overhead()
 
 func generate_overhead():
-	var scene = load("res://assets/overhead_plate.tscn")
+	var scene = load("res://scenes/ui/overhead/overhead_plate.tscn")
 	var node = scene.instantiate()
 	node.visible = false
 	
