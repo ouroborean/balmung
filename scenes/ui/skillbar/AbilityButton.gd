@@ -8,6 +8,8 @@ signal ability_use(ability)
 
 var ability
 
+#hello
+
 func _ready():
 	
 	time_label.hide()
