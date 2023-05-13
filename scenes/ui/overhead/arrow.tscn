@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://sclp2ty5814n"]
+
+[ext_resource type="Script" path="res://scenes/ui/overhead/arrow_bob.gd" id="1_xaqfw"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ha4q0"]
+albedo_color = Color(0.929412, 0.0627451, 0.0941176, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_m4ew2"]
+material = SubResource("StandardMaterial3D_ha4q0")
+size = Vector3(1.5, 1, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bwx0t"]
+albedo_color = Color(0.929412, 0.0627451, 0.0941176, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_55ysc"]
+material = SubResource("StandardMaterial3D_bwx0t")
+size = Vector3(0.5, 1, 0.5)
+
+[node name="Arrow" type="Node3D" groups=["arrow"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.38581, 0)
+script = ExtResource("1_xaqfw")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 0.959002, 0)
+mesh = SubResource("PrismMesh_m4ew2")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.90103, 0)
+mesh = SubResource("BoxMesh_55ysc")

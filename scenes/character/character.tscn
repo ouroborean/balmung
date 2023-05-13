@@ -1,14 +1,37 @@
-[gd_scene load_steps=3 format=3 uid="uid://dbinx0r15yqi3"]
+[gd_scene load_steps=7 format=3 uid="uid://cljfjrkvp4elj"]
+
+[ext_resource type="Script" path="res://scenes/character/player_controller.gd" id="1_de0q4"]
+[ext_resource type="PackedScene" path="res://scenes/ui/overhead/health_bar.tscn" id="1_ley1b"]
+[ext_resource type="PackedScene" uid="uid://cb6kp87jb64ry" path="res://scenes/ui/overhead/energy_bar.tscn" id="2_ikp6p"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_e7clm"]
 height = 1.89159
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_pftmn"]
 
-[node name="Character" type="CharacterBody3D"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[sub_resource type="SphereMesh" id="SphereMesh_0ecr3"]
+radius = 0.15
+height = 0.2
+
+[node name="Character" type="CharacterBody3D"]
+script = ExtResource("1_de0q4")
+
+[node name="Body" type="CollisionShape3D" parent="."]
+
 shape = SubResource("CylinderShape3D_e7clm")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_pftmn")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.125485, 0.495071, 0.473502)
+mesh = SubResource("SphereMesh_0ecr3")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.214361, 0.495071, 0.473502)
+mesh = SubResource("SphereMesh_0ecr3")
+
+[node name="HealthBar" parent="." instance=ExtResource("1_ley1b")]
+
+[node name="EnergyBar" parent="." instance=ExtResource("2_ikp6p")]
