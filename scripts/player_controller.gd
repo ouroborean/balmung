@@ -263,7 +263,14 @@ func any_movement():
 
 func coyote_jumpable():
 	return coyote_timer <= COYOTE_LIMIT and move_state == movement.FALLING
-	
+
+func distance_to_target():
+	if target:
+		return consolidate_distance(abs(global_position - target.global_position))
+
+func consolidate_distance(distance):
+	return distance.x + distance.y + distance.z	
+
 func dash(speed, duration):
 	# Get input direction for dash
 	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")

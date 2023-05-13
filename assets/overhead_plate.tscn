@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://cp4wyvajvkmiu"]
+
+[ext_resource type="PackedScene" uid="uid://yvciqs7wc877" path="res://assets/health_bar.tscn" id="1_qthm6"]
+[ext_resource type="PackedScene" uid="uid://b605uu6mm2vix" path="res://assets/name_plate.tscn" id="2_q1wmn"]
+
+[node name="OverheadPlate" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -946.0
+offset_bottom = -599.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HealthBar" parent="." instance=ExtResource("1_qthm6")]
+layout_mode = 1
+offset_top = 23.0
+offset_right = -206.0
+offset_bottom = -26.0
+
+[node name="NamePlate" parent="." instance=ExtResource("2_q1wmn")]
+layout_mode = 1
+offset_right = -206.0
+offset_bottom = -49.0

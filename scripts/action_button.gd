@@ -15,3 +15,7 @@ func _process(delta):
 
 func _on_texture_button_mouse_entered():
 	pass
+
+
+func _on_texture_button_pressed():
+	print("Ping")
