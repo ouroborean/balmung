@@ -10,7 +10,7 @@ height = 1.89159
 [node name="Enemy" type="CharacterBody3D"]
 script = ExtResource("1_cyagm")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="Body" type="CollisionShape3D" parent="."]
 shape = SubResource("CylinderShape3D_e7clm")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

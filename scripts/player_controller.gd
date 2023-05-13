@@ -77,6 +77,14 @@ var active_dash_limit = 0.0
 func _ready():
 	# lets the script access input
 	set_process_input(true)
+	$HealthBar.visible = not get_viewport().get_camera_3d().is_position_behind(global_transform.origin)
+	var screen_pos_hp = get_viewport().get_camera_3d().unproject_position(global_transform.origin)
+	$HealthBar.position = Vector2(screen_pos_hp.x - 100, screen_pos_hp.y + 100)
+	
+	$EnergyBar.visible = not get_viewport().get_camera_3d().is_position_behind(global_transform.origin)
+	var screen_pos_energy = get_viewport().get_camera_3d().unproject_position(global_transform.origin)
+	$EnergyBar.position = Vector2(screen_pos_energy.x - 100, screen_pos_energy.y + 123)
+
 
 # pumps input events every frame
 func _input(ev):
@@ -350,9 +358,11 @@ func remove_target():
 
 func _on_enemy_target_clicked(entity):
 	if target:
-		print("Targeted with a current target!")
 		target.detarget()
 		remove_target()
 	set_target(entity)
 	entity.set_targeted()
+	
 
+func _on_action_button_button_down():
+	print(char_data.name)

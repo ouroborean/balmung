@@ -10,7 +10,18 @@ func _ready():
 	instantiate_entity(69, Vector3(15, 1, -15))
 	
 
+func instantiate_action_button(action_name, pos):
+	var entity = load("res://assets/action_button.tscn").instantiate()
+	entity.position = pos
+	var button = entity.get_node("TextureRect/TextureButton")
+	button.button_down.connect(player._on_action_button_button_down)
+	
+	add_child(entity)
+
+
 func instantiate_entity(entity_id, pos = Vector3(0, 0, 0)):
+	
+	
 	var entity = load("res://assets/enemy.tscn").instantiate()
 	
 	#get the entity's personal data and assign it
